@@ -30,5 +30,5 @@ app.get('/', (req, res) => {
 
 
 app.listen(PORT, (req, res) => {
-  console.log("server is responding")
+  console.log(`server is responding on ${PORT}`)
 })
