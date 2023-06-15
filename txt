@@ -1,0 +1,8 @@
+    donor_name,
+     donor_email,
+     password,
+     blood_group,
+     age,
+     mobile_no,
+     state,
+     city
