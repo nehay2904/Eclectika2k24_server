@@ -123,6 +123,7 @@ app.put('/update', async (req, res) => {
     res.status(500).json({ error: 'Failed to update profile' });
   }
 });
+// 
 
 app.delete('/delete', async(req, res) => {
   const old_user = await userModel.findOne();
