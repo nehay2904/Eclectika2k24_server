@@ -105,6 +105,61 @@ app.post('/login', async (req, res) => {
 });
 
 
+app.put('/update', async (req, res) => {
+
+  const { donor_name, donor_email, password, blood_group, age, mobile_no, state, city } = req.body;
+  const old_user = await userModel.findOne();
+
+
+  try {
+    const user = await userModel.findByIdAndUpdate(
+      old_user._id,
+      { donor_name, donor_email, password, blood_group, age, mobile_no, state, city },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+app.delete('/delete', async(req, res) => {
+  const old_user = await userModel.findOne();
+
+  userModel.findByIdAndDelete(old_user._id, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json('Item deleted successfully');
+    }
+  });
+});
+
+
+
+app.post('/req', (req, res) => {
+  try {
+    const { req_city, req_blood_group } = req.body;
+    const user = req.body;
+    const newUser = new reqModel(user);
+    newUser.save()
+    console.log(req.body)
+    app.get("/data", async (req, res) => {
+      try {
+        const donor = await userModel.find({ city: req_city, blood_group: req_blood_group });
+        res.send(donor);
+        console.log("request is accepted", donor);
+      } catch (err) {
+        console.log(err);
+      }
+    })
+  }
+  catch (error) {
+    console.log(error)
+  }
+})
+
 app.get('/', (req, res) => {
   res.send("hello world")
 })
