@@ -22,7 +22,7 @@ require('dotenv').config();
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-const userModel = require('./Donor')
+const userModel = require('./donor')
 const reqModel = require('./Request')
 
 // MONGODB_URI=mongodb+srv://neha2212:221200@cluster0.lhaoo6g.mongodb.net/test
@@ -47,6 +47,15 @@ app.get("/foo", async (req, res) => {
   }
 });
 
+app.get("/reqfoo", async (req, res) => {
+  try {
+    const donor = await reqModel.find({});
+    res.send(donor);
+    console.log(donor);
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 // Registration route
 app.post('/register', async (req, res) => {
@@ -136,7 +145,6 @@ app.delete('/delete', async(req, res) => {
     }
   });
 });
-
 
 
 app.post('/req', (req, res) => {
