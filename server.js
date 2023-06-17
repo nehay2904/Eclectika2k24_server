@@ -85,13 +85,23 @@ app.post('/register', async (req, res) => {
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
+
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-
+    app.get("/read", async (req, res) => {
+      try {
+        const donor = await userModel.findById({});
+        res.send(donor);
+        console.log(donor);
+      } catch (err) {
+        console.log(err);
+      }
+    });
 // Login route
 app.post('/login', async (req, res) => {
   try {
@@ -156,18 +166,20 @@ app.post('/req', (req, res) => {
     console.log(req.body)
     app.get("/data", async (req, res) => {
       try {
-        const donor = await userModel.find({ city: req_city, blood_group: req_blood_group });
+        const donor = await userModel.find({});
         res.send(donor);
         console.log("request is accepted", donor);
       } catch (err) {
         console.log(err);
       }
     })
+   
   }
   catch (error) {
     console.log(error)
   }
 })
+
 
 app.get('/', (req, res) => {
   res.send("hello world")
