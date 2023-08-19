@@ -5,6 +5,7 @@ const app = express()
 app.use(express.json())
 
 
+
 const mongoose = require("mongoose")
 
 const bodyParser = require("body-parser");
@@ -19,12 +20,13 @@ app.use(cors())
 
 require('dotenv').config();
 
+
+
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 const userModel = require('./donor')
 const reqModel = require('./Request')
-
 // MONGODB_URI=mongodb+srv://neha2212:221200@cluster0.lhaoo6g.mongodb.net/test
 
 //connection of mongoose
@@ -42,8 +44,21 @@ app.get("/foo", async (req, res) => {
     const donor = await userModel.find({});
     res.send(donor);
     console.log(donor);
+    
   } catch (err) {
     console.log(err);
+  }
+});
+
+app.get('/api/profile', async (req, res) => {
+  try {
+    // Retrieve the user's ID from the request object (assuming you're using authentication middleware)
+    const userId = req.user.id;
+    // Find the user in the database by their ID
+    const user = await userModel.findById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching user profile' });
   }
 });
 
@@ -57,12 +72,36 @@ app.get("/reqfoo", async (req, res) => {
   }
 });
 
-// Registration route
+
+app.post('/login', async(req, res) => {
+  const { donor_email, password } = req.body;
+
+  const old_user= await userModel.findOne({donor_email:donor_email, password:password});
+  // Perform your own authentication logic here
+ 
+try {
+  if (old_user) {
+    res.status(200).json({ message: "you are logged in" });
+  
+  
+  }else {
+    res.status(401).json({ error: 'Invalid donor email or password' });
+  }
+;
+
+
+} catch (error) {
+  res.status(401).json({ error });
+}
+});
+
+
 app.post('/register', async (req, res) => {
   try {
     const {  donor_name, donor_email, password, blood_group, age, mobile_no, state, city} = req.body;
 
     // Check if the user already exists
+  
     const existingUser = await userModel.findOne({ donor_email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
@@ -84,7 +123,10 @@ app.post('/register', async (req, res) => {
     // Save the user to the database
     await newUser.save();
 
-    res.status(201).json({ message: 'User registered successfully' });
+   
+    const old_user = userModel.find()
+    const token = jwt.sign({userId : old_user.id }, "secretKey", { expiresIn: '1h' });
+    res.status(201).json({ message: 'User registered successfully',  token  });
 
     
   } catch (error) {
@@ -92,37 +134,24 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+app.post('/read', async (req, res) => {
 
-    app.get("/read", async (req, res) => {
-      try {
-        const donor = await userModel.findById({});
-        res.send(donor);
-        console.log(donor);
-      } catch (err) {
-        console.log(err);
-      }
-    });
-// Login route
-app.post('/login', async (req, res) => {
+  const { donor_name, donor_email, password, blood_group, age, mobile_no, state, city } = req.body;
+  const old_user = await userModel.findOne();
+
+
   try {
-    const { donor_email, password } = req.body;
+    const user = await userModel.findById(
+      old_user._id,
+      { donor_name, donor_email, password, blood_group, age, mobile_no, state, city }
+   
+    );
 
-    // Check if the user exists
-    const user = await userModel.findOne({ donor_email ,password});
-    if (!user) {
-      return res.status(400).json({ message: 'User not found' });
-    }
-
-    // Create and sign a JWT token
-    const token = jwt.sign({ userId: user._id }, 'secretKey');
-
-    res.status(200).json({ token });
+    res.json(user);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ error: 'Failed to update profile' });
   }
 });
-
 
 app.put('/update', async (req, res) => {
 
@@ -144,8 +173,9 @@ app.put('/update', async (req, res) => {
 });
 // 
 
+
 app.delete('/delete', async(req, res) => {
-  const old_user = await userModel.findOne();
+  const old_user = await userModel.findByIdAndDelete();
 
   userModel.findByIdAndDelete(old_user._id, (err) => {
     if (err) {
@@ -157,6 +187,9 @@ app.delete('/delete', async(req, res) => {
 });
 
 
+
+
+
 app.post('/req', (req, res) => {
   try {
     const { req_city, req_blood_group } = req.body;
@@ -166,7 +199,7 @@ app.post('/req', (req, res) => {
     console.log(req.body)
     app.get("/data", async (req, res) => {
       try {
-        const donor = await userModel.find({});
+        const donor = await userModel.find({ blood_group: req_blood_group});
         res.send(donor);
         console.log("request is accepted", donor);
       } catch (err) {
