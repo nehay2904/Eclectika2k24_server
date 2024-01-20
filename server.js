@@ -12,8 +12,6 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// routes/auth.js
-const jwt = require('jsonwebtoken');
 
 const cors = require('cors')
 app.use(cors())
@@ -73,29 +71,6 @@ app.get("/merchendise", async (req, res) => {
 });
 
 
-app.post('/login', async (req, res) => {
-  const { user_email, password } = req.body;
-
-  const old_user = await userModel.findOne({ user_email: user_email, password: password });
-  // Perform your own authentication logic here
-
-  try {
-    if (old_user) {
-      res.status(200).json({ message: "you are logged in" });
-
-
-    } else {
-      res.status(401).json({ error: 'Invalid user email or password' });
-    }
-    ;
-
-
-  } catch (error) {
-    res.status(401).json({ error });
-  }
-});
-
-
 app.post('/user_register', async (req, res) => {
   try {
     const { user_name, user_email, password, mobile_no, user_semester, user_branch, events } = req.body;
@@ -133,57 +108,8 @@ app.post('/user_register', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-// app.post('/read', async (req, res) => {
-
-//   const { user_name, user_email, password, mobile_no, user_semester, user_branch, events } = req.body;
-//   const old_user = await userModel.findOne();
 
 
-//   try {
-//     const user = await userModel.findById(
-//       old_user._id,
-//       { user_name, user_email, password, mobile_no, user_semester, user_branch, events }
-
-//     );
-
-//     res.json(user);
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to update profile' });
-//   }
-// });
-
-app.put('/update', async (req, res) => {
-
-  const { user_name, user_email, password, mobile_no, user_semester, user_branch, events } = req.body;
-  const old_user = await userModel.findOne();
-
-
-  try {
-    const user = await userModel.findByIdAndUpdate(
-      old_user._id,
-      { user_name, user_email, password, mobile_no, user_semester, user_branch, events },
-      { new: true }
-    );
-
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update profile' });
-  }
-});
-// 
-
-
-app.delete('/delete', async (req, res) => {
-  const old_user = await userModel.findByIdAndDelete();
-
-  userModel.findByIdAndDelete(old_user._id, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json('Item deleted successfully');
-    }
-  });
-});
 
 
 app.post('/merchendise_data', async (req, res) => {
