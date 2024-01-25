@@ -7,34 +7,30 @@ const UserSchema = new mongoose.Schema({
         required: true,
         auto: true,
     },
-    user_name: {
+    name: {
         type: String
     },
-
-    user_email: {
+    url: {
         type: String
     },
-    password: {
+    domain:{
         type: String
     },
-    mobile_no: {
+    branch:{
         type: String
     },
-    user_semester: {
-        type: String
+    email:{
+        type:String
     },
-    user_branch: {
-        type: String
-    },
-    events: {
-        type: Array
+    merch_url:{
+        type:String
     }
 })
 
 
 
 
-const userModel = mongoose.model("user_info", UserSchema)
+const teamModel = mongoose.model("team", UserSchema)
 
 
-module.exports = userModel;
+module.exports = teamModel;
