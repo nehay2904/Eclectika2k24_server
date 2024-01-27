@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 const cors = require('cors')
 app.use(cors({
-  origin:"http://localhost:3000",
+  origin:"https://fabulous-pudding-c502de.netlify.app/",
   methods:"GET, POST, PUT, DELETE",
   credentials:true
 }))
@@ -60,7 +60,7 @@ app.get("/users", async (req, res) => {
 
 app.post('/user_register', async (req, res) => {
   try {
-    const { user_name, user_email, password, mobile_no, user_semester, user_branch, events } = req.body;
+    const { user_name, user_email, comments } = req.body;
 
     // Check if the user already exists
 
@@ -74,11 +74,7 @@ app.post('/user_register', async (req, res) => {
     const newUser = new userModel({
       user_name,
       user_email,
-      password,
-      mobile_no,
-      user_semester,
-      user_branch,
-      events
+      comments
     });
 
     // Save the user to the database
@@ -108,7 +104,7 @@ app.post('/user_register', async (req, res) => {
 //   }
 // });
 
-app.get("/merchendise", async (req, res) => {
+app.get("/get_merchendise", async (req, res) => {
   try {
     const merch = await merchModel.find({});
     res.send(merch);
