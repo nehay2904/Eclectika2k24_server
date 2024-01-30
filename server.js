@@ -14,12 +14,7 @@ app.use(bodyParser.json());
 
 
 const cors = require('cors')
-app.use(cors({
-  origin:"https://65b4c561391a75747694e9e2--courageous-treacle-94f00b.netlify.app/",
-  methods:"GET, POST, PUT, DELETE",
-  credentials:true
-}))
-
+app.use(cors())
 
 require('dotenv').config();
 
