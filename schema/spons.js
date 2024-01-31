@@ -7,9 +7,6 @@ const UserSchema = new mongoose.Schema({
         required: true,
         auto: true,
     },
-    spons_name: {
-        type: String
-    },
     spons_url: {
         type: String
     }

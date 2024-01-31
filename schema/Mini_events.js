@@ -7,10 +7,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         auto: true,
     },
-    name: {
+    event_name: {
         type: String
     },
-    desc: {
+    event_desc: {
         type: String
     }
 })

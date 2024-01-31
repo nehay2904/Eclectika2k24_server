@@ -159,13 +159,12 @@ app.get("/get_spons", async (req, res) => {
 
 
 app.post('/spons_data', async (req, res) => {
-    const { spons_name, spons_url } = req.body;
+    const {  spons_url } = req.body;
 
     // Check if the user already exists
    
     // Create a new user
     const newUser = new sponsModel({
-      spons_name,
       spons_url
     });
 
