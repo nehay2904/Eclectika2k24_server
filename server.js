@@ -27,7 +27,7 @@ const commentModel = require('./schema/comments')
 const merchModel = require('./schema/merchandise');
 const sponsModel = require('./schema/spons');
 const eventsModel = require('./schema/Mini_events');
-const teamModel = require('./Team');
+const teamModel = require('./schema/Team');
 // MONGODB_URI=mongodb+srv://neha2212:221200@cluster0.lhaoo6g.mongodb.net/test
 
 //connection of mongoose

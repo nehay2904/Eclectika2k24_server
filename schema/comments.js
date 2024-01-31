@@ -7,16 +7,16 @@ const userSchema = new mongoose.Schema({
         required: true,
         auto: true,
     },
-    comment_name: {
+    user_name: {
         type: String
     },
 
-    comment_email: {
+    user_email: {
         type: String
     },
     
     comments: {
-        type: Array
+        type: String
     },
     dateField: {
         type: Date,
