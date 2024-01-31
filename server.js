@@ -54,39 +54,19 @@ app.get("/get_comment", async (req, res) => {
 });
 
 app.post('/comment_data', async (req, res) => {
-  try {
-    const { user_name, user_email, comments } = req.body;
+  const { user_name, user_email, comment } = req.body;
 
-    // Check if the user already exists
+  const newUser = new commentModel({
+     user_name,
+     user_email,
+     comment
+  });
 
-    const existingUser = await commentModel.findOne({ user_email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+  // Save the user to the database
+  await newUser.save();
+  console.log(newUser)
 
-
-    // Create a new user
-    const newUser = new commentModel({
-      user_name,
-      user_email,
-      comments
-    });
-
-    // Save the user to the database
-    await newUser.save();
-
-
-    const old_user = commentModel.find()
-    const token = jwt.sign({ userId: old_user.id }, "secretKey", { expiresIn: '1h' });
-    res.status(201).json({ message: 'User registered successfully', token });
-
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
+  })
 
 app.get("/get_merchendise", async (req, res) => {
   try {
