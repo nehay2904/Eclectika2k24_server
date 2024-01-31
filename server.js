@@ -23,7 +23,7 @@ require('dotenv').config();
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-const userModel = require('./schema/registration')
+const commentModel = require('./schema/comments')
 const merchModel = require('./schema/merchandise');
 const sponsModel = require('./schema/spons');
 const eventsModel = require('./schema/Mini_events');
@@ -42,9 +42,9 @@ mongoose.connect(MONGODB_URI, {
 
 
 
-app.get("/users", async (req, res) => {
+app.get("/get_comment", async (req, res) => {
   try {
-    const user = await userModel.find({});
+    const user = await commentModel.find({});
     res.send(user);
     console.log(user);
 
@@ -53,20 +53,20 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.post('/user_register', async (req, res) => {
+app.post('/comment_data', async (req, res) => {
   try {
     const { user_name, user_email, comments } = req.body;
 
     // Check if the user already exists
 
-    const existingUser = await userModel.findOne({ user_email });
+    const existingUser = await commentModel.findOne({ user_email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
 
     // Create a new user
-    const newUser = new userModel({
+    const newUser = new commentModel({
       user_name,
       user_email,
       comments
@@ -76,7 +76,7 @@ app.post('/user_register', async (req, res) => {
     await newUser.save();
 
 
-    const old_user = userModel.find()
+    const old_user = commentModel.find()
     const token = jwt.sign({ userId: old_user.id }, "secretKey", { expiresIn: '1h' });
     res.status(201).json({ message: 'User registered successfully', token });
 
@@ -87,17 +87,6 @@ app.post('/user_register', async (req, res) => {
   }
 });
 
-// app.get('/api/profile', async (req, res) => {
-//   try {
-//     // Retrieve the user's ID from the request object (assuming you're using authentication middleware)
-//     const userId = req.user.id;
-//     // Find the user in the database by their ID
-//     const user = await userModel.findById(userId);
-//     res.status(200).json(user);
-//   } catch (error) {
-//     res.status(500).json({ error: 'An error occurred while fetching user profile' });
-//   }
-// });
 
 app.get("/get_merchendise", async (req, res) => {
   try {
@@ -116,7 +105,7 @@ app.post('/merchendise_data', async (req, res) => {
 
     // Check if the user already exists
 
-    const existingUser = await userModel.findOne({ merch_email });
+    const existingUser = await commentModel.findOne({ merch_email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
